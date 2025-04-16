@@ -1,0 +1,23 @@
+two relu, softmax
+ loss   accuracy 
+0.08372027 0.98269999 
+
+
+sigmoid, softmax
+loss   accuracy 
+0.07125609 0.97920001 
+
+relu, softplus
+loss   accuracy 
+0.09146166 0.98049998 
+
+softplus, softmax
+loss   accuracy 
+0.06721386 0.98110002 
+
+
+Hello,
+
+At this time, we are seeing messages process normally, it may take some time for queues to fully process.  Please let us know if issues are persisting or if this issue has been resolved on your end.
+
+Thank you, 

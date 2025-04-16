@@ -1,0 +1,11 @@
+Layers,Hidden layer 1,Hidden layer 2,Hidden layer 3,Activation function 1,Activation Function 2,Activation 3,Drop out rate,Activation final,Accuracy
+3,256,128,64,Relu,Relu,Relu,0.25,Softmax,99.5
+2,128,64,NA,Sigmoid,Sigmoid,NA,0.25,Softmax,99.3
+2,128,64,NA,Tanh,Tanh,NA,0.25,Softplus,95.16
+2,128,64,NA,Softmax,Softmax,NA,0.25,Softplus,95.16
+3,256,256,256,Relu,Relu,Relu,0.25,Softmax,98.766
+3,64,64,64,Sigmoid,Sigmoid,Sigmoid,0.25,Softmax,98.6
+3,256,128,64,Relu,Sigmoid,Relu,0.25,Softmax,99.6
+3,256,128,64,Relu,Sigmoid,Relu,0.4,Softmax,99.633
+3,256,128,64,Tanh,Sigmoid,Tanh,0.4,Softmax,99.366
+3,256,128,64,Relu,Softplus,Relu,0.4,Softmax,99.3

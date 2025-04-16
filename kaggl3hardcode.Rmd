@@ -1,0 +1,148 @@
+---
+title: "Kaggle3(hardcode)"
+author: "Nicholas Scholl"
+date: "2023-11-21"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+set.seed(123)
+```
+
+```{r}
+x <- as.matrix(read.csv("mnist_train.csv"))
+y <- as.vector(read.csv("mnist_train_targets.csv")$x)
+x_test <- as.matrix(read.csv("mnist_test.csv"))
+```
+
+```{r}
+
+x <- apply(x, 2, function(y) y / 255)
+x_test <- apply(x_test, 2, function(y) y / 255)
+
+x_train <- scale(x[, c(1:2)])
+dim(y) <- c(length(y), 1)
+x_test <- scale(x_test[, c(1:2)])
+
+
+```
+
+```{r}
+getLayerSize <- function(X, y, hidden_neurons, train=TRUE) {
+
+   n_x <- dim(X)[1]
+  n_h <- hidden_neurons
+  n_y <- dim(y)[1]  
+  
+  size <- list("n_x" = n_x,
+               "n_h" = n_h,
+               "n_y" = n_y)
+  
+  return(size)
+}
+```
+
+
+```{r}
+layer_size <- getLayerSize(x_train, y, hidden_neurons = 4)
+layer_size
+```
+
+
+```{r}
+initializeParameters <- function(X, list_layer_size){
+
+    m <- dim(data.matrix(X))[2]
+    
+    n_x <- list_layer_size$n_x
+    n_h <- list_layer_size$n_h
+    n_y <- list_layer_size$n_y
+        
+    W1 <- matrix(runif(n_h * n_x), nrow = n_h, ncol = n_x, byrow = TRUE) * 0.01
+    b1 <- matrix(rep(0, n_h), nrow = n_h)
+    W2 <- matrix(runif(n_y * n_h), nrow = n_y, ncol = n_h, byrow = TRUE) * 0.01
+    b2 <- matrix(rep(0, n_y), nrow = n_y)
+    
+    params <- list("W1" = W1,
+                   "b1" = b1, 
+                   "W2" = W2,
+                   "b2" = b2)
+    
+    return (params)
+}
+```
+
+```{r}
+init_params <- initializeParameters(x_train, layer_size)
+lapply(init_params, function(x) dim(x))
+```
+
+
+```{r}
+sigmoid <- function(x){
+    return(1 / (1 + exp(-x)))
+}
+```
+
+```{r}
+relu <- function(x) {
+  return(max(0, x))
+}
+```
+
+```{r}
+forwardPropagation <- function(X, params, list_layer_size){
+    
+    m <- dim(X)[2]
+    n_h <- list_layer_size$n_h
+    n_y <- list_layer_size$n_y
+    
+    W1 <- params$W1
+    b1 <- params$b1
+    W2 <- params$W2
+    b2 <- params$b2
+    
+    b1_new <- matrix(rep(b1, m), nrow = n_h)
+    b2_new <- matrix(rep(b2, m), nrow = n_y)
+    
+    Z1 <- W1 %*% X + b1_new
+    A1 <- sigmoid(Z1)
+    Z2 <- W2 %*% A1 + b2_new
+    A2 <- sigmoid(Z2)
+    
+    cache <- list("Z1" = Z1,
+                  "A1" = A1, 
+                  "Z2" = Z2,
+                  "A2" = A2)
+
+    return (cache)
+}
+```
+
+```{r}
+fwd_prop <- forwardPropagation(x_train, init_params, layer_size)
+lapply(fwd_prop, function(x) dim(x))
+```
+
+```{r}
+computeCost <- function(X, y, cache) {
+    m <- dim(X)[2]
+    A2 <- cache$A2
+    logprobs <- (log(A2) * y) + (log(1-A2) * (1-y))
+    cost <- -sum(logprobs/m)
+    return (cost)
+}
+cost <- computeCost(x_train, y_train, fwd_prop)
+cost
+```
+

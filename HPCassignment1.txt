@@ -1,0 +1,85 @@
+%%writefile hw1.py
+import sys
+import time
+import numpy as np
+
+def read_adjacency_matrix(file_name):
+  file_object = open(file_name, "r")
+  # Input the number of rows and columns
+  size = int(file_object.readline())
+  rows = size
+  cols = size
+  # Initialize an empty matrix
+  matrix = []
+
+  # Input the matrix elements
+  for i in range(rows):
+    row = list(map(int, file_object.readline().split()))
+    matrix.append(row)
+  # Display the matrix
+  print("The matrix contained in the file ",file_name," is: ")
+  for row in matrix:
+    print(row)
+  return matrix,size
+
+# Convert an integer into a set of nodes
+def convert_from_int_to_set(integer,size):
+  set_of_nodes = []
+  mask = 1
+  for i in range(size):
+    if ((mask & integer) != 0):
+      set_of_nodes.append(i)
+    mask = mask * 2
+  return set_of_nodes
+
+# Find the maximum independent set
+@profile
+def find_max_ind_set(a_numpy,size):
+  max_independent_set_size = 0
+  max_independent_set = []
+  size_of_power_set = 1
+  for i in range(size):
+    size_of_power_set *= 2
+  # print("The power set has ",size_of_power_set," elements")
+
+  for i in range(size_of_power_set):
+    this_set = convert_from_int_to_set(i,size)
+  #  print(this_set)
+  # Your code goes here:
+  def edge(node1, node2, edge_set):
+    return (node1, node2) in edge_set or (node2, node1) in edge_set
+    found_edges = []
+    for node1 in this_set:
+      for node2 in this_set:
+        if node1 != node2:
+          if edge(node1, node2, edge_set):
+            found_edges.append((node1, node2))
+
+
+
+
+
+
+  # For every pair of elements in this_set, check if there is an edge between them
+  # If there is an edge, this_set is not an independent set
+  # If there are none, this_set is an independent set.
+  # Compare its size with the largest independent set found so far
+  # and if it is larger, update the largest independent set and its size
+
+
+  print("A max independent set is: ",max_independent_set)
+  return max_independent_set_size
+
+
+
+if __name__ == "__main__":
+# Read the content of the file with the a passed in the command line
+# that contain the matrices to be multiplied
+  adj_matrix,size = read_adjacency_matrix(sys.argv[1])
+  adj_matrix_numpy = np.array(adj_matrix)
+  start_time = time.time()
+  max_independent_set_size = find_max_ind_set(adj_matrix_numpy,size)
+  end_time = time.time()
+  elapsed_time = end_time - start_time
+  print("Time required to carry out the computation: ",elapsed_time)
+  print("The size of the maximum independent set is: ",max_independent_set_size)
